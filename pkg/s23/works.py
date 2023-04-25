@@ -1,8 +1,13 @@
 import requests
+import os
+import sys
+import time
+import bibtexparser
 import base64
-from IPython.display import display, HTML
-
 import matplotlib.pyplot as plt
+from bibtexparser.bwriter import BibTexWriter
+from bibtexparser.bibdatabase import BibDatabase
+from IPython.display import display, HTML
 from IPython.core.pylabtools import print_figure
 
 class Works:
@@ -114,3 +119,75 @@ class Works:
 
         display(HTML(uri))
         return ris
+
+    @property
+    def bibtex(self):
+        _authors = [au['author']['display_name'] for au in self.data['authorships']]
+        if len(_authors) == 1:
+            authors = _authors[0]
+        else:
+            authors = ', '.join(_authors[0:-1]) + ' and' + _authors[-1]
+        title = self.data['title']
+        journal = self.data['host_venue']['display_name']
+        volume = str(self.data['biblio']['volume'])
+        pages = '-'.join([self.data['biblio'].get('first_page', '') or '',
+                          self.data['biblio'].get('last_page', '') or ''])
+        year = str(self.data['publication_year'])
+        citedby = self.data['cited_by_count']
+        url = self.data['host_venue']['url']
+        doi = self.data['doi']
+        journal_type = self.data['type']
+        db = BibDatabase()
+        db.entries = [
+    {'journal': journal,
+     'pages': pages,
+     'title': title,
+     'year': year,
+     'volume': volume,
+     'author': authors,
+     'url': url,
+     'doi':doi,
+     'ID': authors + year,
+     'ENTRYTYPE': journal_type}]
+
+
+        writer = BibTexWriter()
+        with open('bibtex.bib', 'w') as bibfile:
+            bibfile.write(writer.write(db))
+        print(open('bibtex.bib', 'r').read())
+
+    @property
+    def bibtex(self):
+        _authors = [au['author']['display_name'] for au in self.data['authorships']]
+        if len(_authors) == 1:
+            authors = _authors[0]
+        else:
+            authors = ', '.join(_authors[0:-1]) + ' and' + _authors[-1]
+        title = self.data['title']
+        journal = self.data['host_venue']['display_name']
+        volume = str(self.data['biblio']['volume'])
+        pages = '-'.join([self.data['biblio'].get('first_page', '') or '',
+                          self.data['biblio'].get('last_page', '') or ''])
+        year = str(self.data['publication_year'])
+        citedby = self.data['cited_by_count']
+        url = self.data['host_venue']['url']
+        doi = self.data['doi']
+        journal_type = self.data['type']
+
+        db = BibDatabase()
+        db.entries = [
+    {'journal': journal,
+     'pages': pages,
+     'title': title,
+     'year': year,
+     'volume': volume,
+     'author': authors,
+     'url': url,
+     'doi':doi,
+     'ID': title,
+     'ENTRYTYPE': journal_type}]
+        writer = BibTexWriter()
+        with open('bibtex.bib','w') as bibfile:
+            bibfile.write(writer.write(db))
+        print(open('bibtex.bib','r').read())
+
