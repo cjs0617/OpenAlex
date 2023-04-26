@@ -10,7 +10,7 @@ jobs:
           pip install black
           black --check .
   pytest:
-    runs-on: windows-lattest
+    runs-on: ubuntu-latest
     steps:      
       - uses: actions/checkout@v3
       - run: |
