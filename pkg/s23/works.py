@@ -1,15 +1,13 @@
-import requests
-import os
-import sys
-import bibtexparser
+"""work class"""
 import base64
+import requests
 from bibtexparser.bwriter import BibTexWriter
 from bibtexparser.bibdatabase import BibDatabase
 from IPython.display import display, HTML
-from IPython.core.pylabtools import print_figure
 
 
 class Works:
+    """define work class"""
     def __init__(self, oaid):
         self.oaid = oaid
         self.req = requests.get(f"https://api.openalex.org/works/{oaid}")
@@ -17,82 +15,6 @@ class Works:
 
     def __str__(self):
         return "str"
-
-    def __repr__(self):
-        _authors = [au["author"]["display_name"] for au in self.data["authorships"]]
-        if len(_authors) == 1:
-            authors = _authors[0]
-        else:
-            authors = ", ".join(_authors[0:-1]) + " and" + _authors[-1]
-
-        title = self.data["title"]
-
-        journal = self.data["host_venue"]["display_name"]
-        volume = self.data["biblio"]["volume"]
-
-        issue = self.data["biblio"]["issue"]
-        if issue is None:
-            issue = ", "
-        else:
-            issue = ", " + issue
-
-        pages = "-".join(
-            [self.data["biblio"]["first_page"], self.data["biblio"]["last_page"]]
-        )
-        year = self.data["publication_year"]
-        citedby = self.data["cited_by_count"]
-
-        oa = self.data["id"]
-        s = f'{authors}, {title}, {volume}{issue}{pages}, ({year}), {self.data["doi"]}. cited by: {citedby}. {oa}'
-        return s
-
-    def _repr_markdown_(self):
-        _authors = [
-            f'[{au["author"]["display_name"]}]({au["author"]["id"]})'
-            for au in self.data["authorships"]
-        ]
-        if len(_authors) == 1:
-            authors = _authors[0]
-        else:
-            authors = ", ".join(_authors[0:-1]) + " and " + _authors[-1]
-
-        title = self.data["title"]
-
-        journal = f"[{self.data['host_venue']['display_name']}]({self.data['host_venue']['id']})"
-        volume = self.data["biblio"]["volume"]
-
-        issue = self.data["biblio"]["issue"]
-        if issue is None:
-            issue = ", "
-        else:
-            issue = ", " + issue
-
-        pages = "-".join(
-            [self.data["biblio"]["first_page"], self.data["biblio"]["last_page"]]
-        )
-        year = self.data["publication_year"]
-        citedby = self.data["cited_by_count"]
-
-        oa = self.data["id"]
-
-        # Citation counts by year
-        years = [e["year"] for e in self.data["counts_by_year"]]
-        counts = [e["cited_by_count"] for e in self.data["counts_by_year"]]
-
-        fig, ax = plt.subplots()
-        ax.bar(years, counts)
-        ax.set_xlabel("year")
-        ax.set_ylabel("citation count")
-        data = print_figure(fig, "png")  # save figure in string
-        plt.close(fig)
-
-        b64 = base64.b64encode(data).decode("utf8")
-        citefig = f"![img](data:image/png;base64,{b64})"
-
-        s = f'{authors}, *{title}*, **{journal}**, {volume}{issue}{pages}, ({year}), {self.data["doi"]}. cited by: {citedby}. [Open Alex]({oa})'
-
-        s += "<br>" + citefig
-        return s
 
     @property
     def ris(self):
@@ -120,8 +42,7 @@ class Works:
 
         ris = "\n".join(fields)
         ris64 = base64.b64encode(ris.encode("utf-8")).decode("utf8")
-        uri = f'<pre>{ris}</pre><br><a href="data:text/plain;base64,{ris64}" download="ris">Download RIS</a>'
-
+        uri = f'<pre>{ris}</pre><br><a href="data:text/plain;base64,{ris64}" download="ris">Download RIS</a>'	# pylint: disable-msg=C0301
         display(HTML(uri))
         return ris
 
@@ -142,55 +63,11 @@ class Works:
             ]
         )
         year = str(self.data["publication_year"])
-        citedby = self.data["cited_by_count"]
         url = self.data["host_venue"]["url"]
         doi = self.data["doi"]
         journal_type = self.data["type"]
-        db = BibDatabase()
-        db.entries = [
-            {
-                "journal": journal,
-                "pages": pages,
-                "title": title,
-                "year": year,
-                "volume": volume,
-                "author": authors,
-                "url": url,
-                "doi": doi,
-                "ID": authors + year,
-                "ENTRYTYPE": journal_type,
-            }
-        ]
-
-        writer = BibTexWriter()
-        with open("bibtex.bib", "w") as bibfile:
-            bibfile.write(writer.write(db))
-        print(open("bibtex.bib", "r").read())
-
-    @property
-    def bibtex(self):
-        _authors = [au["author"]["display_name"] for au in self.data["authorships"]]
-        if len(_authors) == 1:
-            authors = _authors[0]
-        else:
-            authors = ", ".join(_authors[0:-1]) + " and" + _authors[-1]
-        title = self.data["title"]
-        journal = self.data["host_venue"]["display_name"]
-        volume = str(self.data["biblio"]["volume"])
-        pages = "-".join(
-            [
-                self.data["biblio"].get("first_page", "") or "",
-                self.data["biblio"].get("last_page", "") or "",
-            ]
-        )
-        year = str(self.data["publication_year"])
-        citedby = self.data["cited_by_count"]
-        url = self.data["host_venue"]["url"]
-        doi = self.data["doi"]
-        journal_type = self.data["type"]
-
-        db = BibDatabase()
-        db.entries = [
+        d_b = BibDatabase()
+        d_b.entries = [
             {
                 "journal": journal,
                 "pages": pages,
@@ -204,7 +81,8 @@ class Works:
                 "ENTRYTYPE": journal_type,
             }
         ]
+
         writer = BibTexWriter()
         with open("bibtex.bib", "w") as bibfile:
-            bibfile.write(writer.write(db))
+            bibfile.write(writer.write(d_b))
         print(open("bibtex.bib", "r").read())

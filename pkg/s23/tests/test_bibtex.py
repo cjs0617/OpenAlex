@@ -1,6 +1,8 @@
-from s23 import Works
+"""Bibtex Testing"""
 
-ref_bibtex = """@journal-article{Examples of Effective Data Sharing in Scientific Publishing,
+from s23 import Works  # pylint: disable-msg=E0611
+
+REF_BIBTEX = """@journal-article{Examples of Effective Data Sharing in Scientific Publishing,
  author = {John R. Kitchin},
  doi = {https://doi.org/10.1021/acscatal.5b00538},
  journal = {ACS Catalysis},
@@ -15,7 +17,8 @@ ref_bibtex = """@journal-article{Examples of Effective Data Sharing in Scientifi
 
 
 def test_bibtex(capsys):
-    w = Works("https://doi.org/10.1021/acscatal.5b00538")
-    w.bibtex
+    """Compare reference with output"""
+    w_self = Works("https://doi.org/10.1021/acscatal.5b00538")
+    w_self.bibtex
     captured = capsys.readouterr()
-    assert captured.out == ref_bibtex
+    assert captured.out == REF_BIBTEX

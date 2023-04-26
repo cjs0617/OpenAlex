@@ -1,1 +1,2 @@
-from .works import Works
+"""init"""
+from .works import Works  # pylint: disable-msg=E0401
