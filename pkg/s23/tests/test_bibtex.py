@@ -19,6 +19,6 @@ REF_BIBTEX = """@journal-article{Examples of Effective Data Sharing in Scientifi
 def test_bibtex(capsys):
     """Compare reference with output"""
     w_self = Works("https://doi.org/10.1021/acscatal.5b00538")
-    w_self.bibtex
+    w_self.bibtex  # pylint: disable-msg=W0104
     captured = capsys.readouterr()
     assert captured.out == REF_BIBTEX

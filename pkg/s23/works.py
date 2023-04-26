@@ -10,15 +10,18 @@ class Works:
     """define work class"""
 
     def __init__(self, oaid):
+        """initialize"""
         self.oaid = oaid
         self.req = requests.get(f"https://api.openalex.org/works/{oaid}")
         self.data = self.req.json()
 
     def __str__(self):
+        """str"""
         return "str"
 
     @property
     def ris(self):
+        """define ris property"""
         fields = []
         if self.data["type"] == "journal-article":
             fields += ["TY  - JOUR"]
@@ -49,6 +52,7 @@ class Works:
 
     @property
     def bibtex(self):
+        """define bibtex property"""
         _authors = [au["author"]["display_name"] for au in self.data["authorships"]]
         if len(_authors) == 1:
             authors = _authors[0]
@@ -84,6 +88,8 @@ class Works:
         ]
 
         writer = BibTexWriter()
-        with open("bibtex.bib", "w") as bibfile:
+        with open("bibtex.bib", "w", encoding="utf-8") as bibfile:
             bibfile.write(writer.write(d_b))
-        print(open("bibtex.bib", "r").read())
+        with open("bibtex.bib", "r", encoding="utf-8") as bibfile:
+            data = bibfile.read()
+        print(data)
