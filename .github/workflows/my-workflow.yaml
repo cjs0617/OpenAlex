@@ -2,17 +2,17 @@ name: First job
 on: push
 
 jobs:
-  build:
+  black
     runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.9.7'
-    - name: Install dependencies
-      run: |
-        pip install matplotlib requests IPython pytest
-    - name: Run tests
-      run: |
-        pytest
+    steps:      
+      - uses: actions/checkout@v3
+      - run: |
+          pip install black
+          black --check .
+  pytest
+    runs-on: windows-lattest
+    steps:      
+      - uses: actions/checkout@v3
+      - run: |
+          pip install matplotlib requests IPython pytest
+          pytest .     
