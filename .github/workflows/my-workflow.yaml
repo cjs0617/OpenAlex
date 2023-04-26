@@ -2,14 +2,14 @@ name: First job
 on: push
 
 jobs:
-  black
+  black:
     runs-on: ubuntu-latest
     steps:      
       - uses: actions/checkout@v3
       - run: |
           pip install black
           black --check .
-  pytest
+  pytest:
     runs-on: windows-lattest
     steps:      
       - uses: actions/checkout@v3
