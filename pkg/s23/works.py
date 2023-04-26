@@ -8,6 +8,7 @@ from IPython.display import display, HTML
 
 class Works:
     """define work class"""
+
     def __init__(self, oaid):
         self.oaid = oaid
         self.req = requests.get(f"https://api.openalex.org/works/{oaid}")
@@ -42,7 +43,7 @@ class Works:
 
         ris = "\n".join(fields)
         ris64 = base64.b64encode(ris.encode("utf-8")).decode("utf8")
-        uri = f'<pre>{ris}</pre><br><a href="data:text/plain;base64,{ris64}" download="ris">Download RIS</a>'	# pylint: disable-msg=C0301
+        uri = f'<pre>{ris}</pre><br><a href="data:text/plain;base64,{ris64}" download="ris">Download RIS</a>'  # pylint: disable-msg=C0301
         display(HTML(uri))
         return ris
 
