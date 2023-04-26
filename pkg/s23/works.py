@@ -1,10 +1,8 @@
 import requests
 import os
 import sys
-import time
 import bibtexparser
 import base64
-import matplotlib.pyplot as plt
 from bibtexparser.bwriter import BibTexWriter
 from bibtexparser.bibdatabase import BibDatabase
 from IPython.display import display, HTML
