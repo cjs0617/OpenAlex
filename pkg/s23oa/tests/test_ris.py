@@ -1,5 +1,5 @@
 """ris test"""
-from s23 import Works  # pylint: disable-msg=E0611
+from s23oa import Works  # pylint: disable-msg=E0611
 
 
 REF_RIS = """TY  - JOUR

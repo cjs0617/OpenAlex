@@ -1,6 +1,6 @@
 """Bibtex Testing"""
 
-from s23 import Works  # pylint: disable-msg=E0611
+from s23oa import Works  # pylint: disable-msg=E0611
 
 REF_BIBTEX = """@journal-article{Examples of Effective Data Sharing in Scientific Publishing,
  author = {John R. Kitchin},
